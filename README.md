@@ -18,7 +18,7 @@
     * Single Customer Data Delete
 
 * Product
-    *Create A Product
+    * Create A Product
         * Product Name
         * Product Slug
         * Product Regular PRice
