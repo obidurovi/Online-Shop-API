@@ -2,7 +2,7 @@
 
 ## How To Work On This APi
 
- * Customers
+* Customers
     * Create A Customer Profile
         * Customer Name
         * Customer Email
