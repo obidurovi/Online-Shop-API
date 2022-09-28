@@ -12,7 +12,6 @@
         * Customer Shipping Address
         * Customer Billing Address
         * Customer Address
-
     * All Customer View
     * Single Customer Data View
     * Single Customer Data Update
