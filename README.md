@@ -3,7 +3,7 @@
 ## How To Work On This APi
 
  * Customers
-     *Create A Customer Profile
+     * Create A Customer Profile
         * Customer Name
         * Customer Email
         * Customer Cell Number
