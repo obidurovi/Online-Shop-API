@@ -8,7 +8,7 @@ const tagRouter = express.Router();
 
 // Routes
 tagRouter.route('/').get(getAllTag).post(createTag);
-tagRouter.route('/:slug').put(tagUpdate).delete(tagDelete);
+tagRouter.route('/:id').put(tagUpdate).delete(tagDelete);
 
 
 // Exports Module

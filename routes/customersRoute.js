@@ -4,13 +4,13 @@ const { allCustomerInfo, createCustomer, customerView, customerUpdate, customerD
 const { multerCustomerStorage } = require('../utility/storageDisk');
 
 // Create Router
-const customerRouter = express.Router();
+const customerRoute = express.Router();
 
 
 // Routes
-customerRouter.route('/').get(allCustomerInfo).post(multerCustomerStorage(), createCustomer);
-customerRouter.route('/:id').get(customerView).put(multerCustomerStorage(), customerUpdate).delete(customerDelete);
+customerRoute.route('/').get(allCustomerInfo).post(multerCustomerStorage(), createCustomer);
+customerRoute.route('/:id').get(customerView).put(multerCustomerStorage(), customerUpdate).delete(customerDelete);
 
 
 // Exports Module
-module.exports = customerRouter;
+module.exports = customerRoute;

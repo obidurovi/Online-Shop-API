@@ -15,7 +15,7 @@ const createCustomer = (req, res) => {
     customer.push({
         id :getRandomId(),
         ...req.body,
-        profile_pic : req.file ? req.file.originalname : "https://i.ibb.co/6JqkMxg/download.png"
+        profile_pic : req.file ? req.file.filename : "https://i.ibb.co/6JqkMxg/download.png"
     });
 
     // Condition
@@ -79,7 +79,7 @@ const customerUpdate = (req, res) => {
         customer[index] = {
             ...customer[index],
             ...req.body,
-            profile_pic : req.file ? req.file.originalname : customer[index]?.profile_pic
+            profile_pic : req.file ? req.file.filename : customer[index]?.profile_pic
         }
         // Data Update
         updateCustomerDb(customer);

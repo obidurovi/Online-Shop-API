@@ -1,4 +1,4 @@
-const { getProductDb, updateProductDb } = require("../utility/fileSync");
+const { getProductDb, updateProductDb, removePreviousImage } = require("../utility/fileSync");
 const  getRandomId  = require("../utility/randomID");
 const  getSlug  = require("../utility/getSlug");
 
@@ -28,14 +28,14 @@ const createProduct = (req, res) => {
     let multipleIMG = [];
 
     req.files.forEach(multiple => {
-        multipleIMG.push(multiple.originalname);
+        multipleIMG.push(multiple.filename);
     });
 
     product.push({
         id :getRandomId(),
         ...req.body,
-        slug : getSlug(req.body.name),
-        product_pic : req.files ? multipleIMG : "https://i.ibb.co/6JqkMxg/download.png"
+        slug : getSlug(req.body?.name),
+        product_pic : req.files ? multipleIMG : []
     });
 
     // Condition
@@ -91,26 +91,40 @@ const createProduct = (req, res) => {
     const product = getProductDb();
 
     // Get index
-    const { slug } = req.params;
+    const { id } = req.params;
     
+    const previousImage = product.find( data => data.id == id);
 
-    const index = product.findIndex(data => data.slug == slug);
+    const index = product.findIndex(data => data.id == id);
 
     // Multiple Image Function
     let multipleIMG = [];
 
     req.files.forEach(multiple => {
-        multipleIMG.push(multiple.originalname);
+        multipleIMG.push(multiple.filename);
     });
     
 
     // Validation
-    if ( product.some(data => data.slug == slug )) {
-        // Update Data
+    if ( product.some(item => item.id == id )) {
+        let test = [];
+        if (req.files != "") {
+            // Delete PRevious Image
+            previousImage?.product_pic?.forEach(del => {
+                removePreviousImage(del);
+            });
+
+            // Updated Image
+            test = multipleIMG;
+        }else {
+            test = previousImage.product_pic;
+        }
+        // Update Data Push
         product[index] = {
             ...product[index],
             ...req.body,
-            product_pic : req.files ? multipleIMG : product[index]?.product_pic
+            slug : getSlug(req.body?.name),
+            product_pic : test
         }
         // Data Update
         updateProductDb(product);
@@ -128,20 +142,27 @@ const createProduct = (req, res) => {
 
 /**
  * @desc Product Delete Data
- * @name Delete api/v1/product/slug
+ * @name Delete api/v1/product/id
  * @access public
  */
  const productDelete = (req, res) => {
     const product = getProductDb();
 
     // Get id
-    const { slug } = req.params;
+    const { id } = req.params;
 
-    const allData = product.filter(data => data.slug != slug);
+    const allData = product.filter(data => data.id != id);
 
+    // Find Delete Data
+    const deleteItem = product.find( data => data.id == id);
 
     // Validation
-    if ( product.some(data => data.slug == slug) ) {
+    if ( product.some(data => data.id == id) ) {
+
+        // Delete PRevious Image
+        deleteItem?.product_pic?.forEach(del => {
+        removePreviousImage(del);
+        });
         // Data Update
         updateProductDb(allData);
         res.status(201).json({
@@ -155,7 +176,6 @@ const createProduct = (req, res) => {
         }); 
     }
 }
-
 
 // Exports Controller
 module.exports = {

@@ -1,5 +1,5 @@
 // Get Slug
-const getSlug = (title) => {
+const getSlug = (title = "") => {
 
     // Return Slug
     return title.toLowerCase().replace(/[^\w-]+/g, '-');

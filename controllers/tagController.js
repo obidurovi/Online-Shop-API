@@ -22,14 +22,14 @@ const getAllTag = (req, res) => {
  * @name POST api/v1/tag
  * @access public
  */
-// Create Customer Info
+// Create Tag
 const createTag = (req, res) => {
     const tag = getTagDb();
 
     tag.push({
         id :getRandomId(),
         ...req.body,
-        slug : getSlug(req.body.name)
+        slug : getSlug(req.body?.name)
     });
 
     // Condition
@@ -59,16 +59,17 @@ const createTag = (req, res) => {
     const tag = getTagDb();
 
     // Get slug
-    const { slug } = req.params;
+    const { id } = req.params;
 
-    const index = tag.findIndex(data => data.slug == slug);
+    const index = tag.findIndex(data => data.id == id);
 
     // Validation
-    if ( tag.some(data => data.slug == slug )) {
+    if ( tag.some(data => data.id == id )) {
         // Update Data
         tag[index] = {
             ...tag[index],
-            ...req.body
+            ...req.body,
+            slug : getSlug(req.body?.name)
         }
         // Data Update
         updateTagDb(tag);
@@ -93,12 +94,12 @@ const createTag = (req, res) => {
     const tag = getTagDb();
 
     // Get id
-    const { slug } = req.params;
+    const { id } = req.params;
 
-    const allData = tag.filter(data => data.slug != slug);
+    const allData = tag.filter(data => data.id != id);
 
     // Validation
-    if ( tag.some(data => data.slug == slug) ) {
+    if ( tag.some(data => data.id == id) ) {
         // Data Update
         updateTagDb(allData);
         res.status(201).json({

@@ -1,5 +1,5 @@
 // Init FS
-const { readFileSync, writeFileSync } = require('fs');
+const { readFileSync, writeFileSync, unlinkSync } = require('fs');
 const path = require('path');
 
 // Get All Customer Databse
@@ -49,6 +49,35 @@ const updateProductDb = (obj) => {
 
 }
 
+// Remove Previous Image
+const removePreviousImage = (filename) => {
+
+    unlinkSync(path.join(__dirname, `../public/product/${ filename }`))
+}
+
+// Remove Category Previous Image
+const catePreviousImage = (filename) => {
+
+    unlinkSync(path.join(__dirname, `../public/category/${ filename }`))
+}
+
+//get all brand db
+
+const getBrandDb = () =>{
+
+   const brandDb =  JSON.parse(readFileSync(path.join(__dirname , '../Database/brand.json')));
+
+   return brandDb;
+
+}
+
+//update brand db
+const updateBrandDb = (obj) =>{
+
+    writeFileSync(path.join(__dirname , '../Database/brand.json') , JSON.stringify(obj));
+
+}
+
 // Data Exports
 module.exports = {
     getCustomerDb,
@@ -58,5 +87,9 @@ module.exports = {
     getCategoryDb,
     updateCategoryDb,
     getProductDb,
-    updateProductDb
+    updateProductDb,
+    removePreviousImage,
+    catePreviousImage,
+    getBrandDb,
+    updateBrandDb
 }

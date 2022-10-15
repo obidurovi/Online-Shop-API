@@ -4,13 +4,15 @@ const { allProductInfo, createProduct, productView, productUpdate, productDelete
 const { multerProductStorage } = require('../utility/storageDisk');
 
 // Create Router
-const productRouter = express.Router();
+const productRoute = express.Router();
 
 
 // Routes
-productRouter.route('/').get(allProductInfo).post(multerProductStorage(), createProduct);
-productRouter.route('/:slug').get(productView).put(multerProductStorage(), productUpdate).delete(productDelete);
+productRoute.route('/').get(allProductInfo).post(multerProductStorage(), createProduct);
+productRoute.route('/:slug').get(productView);
+productRoute.route('/:id').get(productView).put(multerProductStorage(),productUpdate).delete(productDelete);
+
 
 
 // Exports Module
-module.exports = productRouter;
+module.exports = productRoute;

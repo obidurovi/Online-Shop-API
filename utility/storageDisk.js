@@ -70,7 +70,7 @@ const multerProductStorage = () => {
 
     const productMulter = multer({
         storage : productStorage
-    }).array('product_pic');
+    }).array('product_pic', 3);
 
     // return multer
     return productMulter;

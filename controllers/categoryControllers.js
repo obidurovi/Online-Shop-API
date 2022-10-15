@@ -1,6 +1,6 @@
-const { getCategoryDb, UpdateCategoryDb, updateCategoryDb } = require("../utility/fileSync");
+const { getCategoryDb, UpdateCategoryDb, updateCategoryDb, catePreviousImage } = require("../utility/fileSync");
 const  getRandomId  = require("../utility/randomID");
-const  getSlug  = require("../utility/getSlug");
+const  getSlug = require("../utility/getSlug");
 
 /**
  * @desc All Category Info
@@ -27,7 +27,7 @@ const createCategory = (req, res) => {
         id :getRandomId(),
         ...req.body,
         slug : getSlug(req.body.name),
-        category_pic : req.file ? req.file.originalname : "https://i.ibb.co/6JqkMxg/download.png"
+        category_pic : req.file ? req.file.filename : ""
     });
 
     // Condition
@@ -39,7 +39,6 @@ const createCategory = (req, res) => {
     }else {
         
         // Data Update
-        // UpdateCategoryDb(category);
         updateCategoryDb(category);
         res.status(201).json({
             "status" : true,
@@ -59,23 +58,37 @@ const createCategory = (req, res) => {
     const category = getCategoryDb();
 
     // Get index
-    const { slug } = req.params;
+    const { id } = req.params;
 
-    const index = category.findIndex(data => data.slug == slug);
 
+    // Old Pic
+    const oldPic = category.find(item => item.id == id);
+    const index = category.findIndex(data => data.id == id);
+
+    
+    // Update Image
+    let updatePhoto = ""
+    if (req.file) {
+        updatePhoto = req?.file?.filename
+        catePreviousImage(oldPic?.category_pic);
+    } else {
+        updatePhoto = oldPic?.category_pic;
+    }
+    console.log(updatePhoto);
     // Validation
-    if ( category.some(data => data.slug == slug )) {
+    if ( category.some(data => data.id == id )) {
         // Update Data
         category[index] = {
             ...category[index],
             ...req.body,
-            category_pic : req.file ? req.file.originalname : category[index]?.profile_pic
+            slug : getSlug(req.body?.name),
+            category_pic : updatePhoto
         }
         // Data Update
         updateCategoryDb(category);
         res.status(200).json({
             "status" : true,
-            "message" : " Customer Data Updated Successfully"
+            "message" : " Category Data Updated Successfully"
         });
     }else {
         res.status(404).json({
@@ -95,12 +108,15 @@ const createCategory = (req, res) => {
     const category = getCategoryDb();
 
     // Get id
-    const { slug } = req.params;
+    const { id } = req.params;
 
-    const allData = category.filter(data => data.slug != slug);
+    const allData = category.filter(data => data.id != id);
+
+    const oldPic = category.find(item => item.id == id)
+    catePreviousImage(oldPic?.category_pic);
 
     // Validation
-    if ( category.some(data => data.slug == slug) ) {
+    if ( category.some(data => data.id == id) ) {
         // Data Update
         updateCategoryDb(allData);
         res.status(201).json({
